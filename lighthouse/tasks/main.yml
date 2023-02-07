@@ -1,0 +1,28 @@
+---
+- name: Install epel-release
+  become: true
+  ansible.builtin.yum:
+    name:
+      - epel-release
+- name: Install git
+  become: true
+  ansible.builtin.yum:
+    name:
+      - git
+- name: Install nginx
+  become: true
+  ansible.builtin.yum:
+    name:
+      - nginx
+- name: Clean html directory
+  become: true
+  ansible.builtin.file:
+    state: absent
+    path: usr/share/nginx/html/
+- name: Copy-lighthouse
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/VKCOM/lighthouse.git
+    version: master
+    dest: "{{ clickhouse_dir }}"
+  notify: Restart nginx
